@@ -80,9 +80,9 @@ if __name__ == "__main__":
     hparams.learning_rate = 0.0001  # Reduce learning rate
 
     # Paths to input data directories
-    input_dir = "/Users/raycheng/Desktop/AI_final/19"
-    output_dir = "/Users/raycheng/Desktop/AI_final/19/198_preprocessed2"
-    checkpoint_path = "/Users/raycheng/Desktop/AI_final/synthesizer/models/tacotron2_wavenet.pth"
+    input_dir = "/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/LibriSpeech/train-clean-100/19"
+    output_dir = "/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/19/19"
+    checkpoint_path = "/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/synthesizer/models/tacotron2_wavenet.pth"
     
     # Ensure checkpoint directory exists
     if not os.path.exists(os.path.dirname(checkpoint_path)):
