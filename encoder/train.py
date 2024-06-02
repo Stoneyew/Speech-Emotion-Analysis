@@ -1,125 +1,80 @@
-from pathlib import Path
-
+import os
 import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, Dataset
+from transformers import BertTokenizer
+from sklearn.model_selection import train_test_split
+from transformer import load_pretrained_model
+from config import Config
 
-from encoder.data_objects import SpeakerVerificationDataLoader, SpeakerVerificationDataset
-from encoder.model import SpeakerEncoder
-from encoder.params_model import *
-from encoder.visualizations import Visualizations
-from utils.profiler import Profiler
+class AudioDataset(Dataset):
+    def __init__(self, file_paths, tokenizer):
+        self.file_paths = file_paths
+        self.tokenizer = tokenizer
 
+    def __len__(self):
+        return len(self.file_paths)
 
-def sync(device: torch.device):
-    # For correct profiling (cuda operations are async)
-    if device.type == "cuda":
-        torch.cuda.synchronize(device)
+    def __getitem__(self, idx):
+        with open(self.file_paths[idx], 'r') as f:
+            features_str = f.read()
+        inputs = self.tokenizer.encode(features_str, max_length=Config.MAX_SEQ_LENGTH, truncation=True, padding='max_length')
+        label = float(idx) / len(self.file_paths)  # Example: Simulating a regression target
+        return torch.tensor(inputs).long(), torch.tensor(label).float()  # Return inputs and label
 
+def load_pretrained_bert_model():
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    return tokenizer
 
-def train(run_id: str, clean_data_root: Path, models_dir: Path, umap_every: int, save_every: int,
-          backup_every: int, vis_every: int, force_restart: bool, visdom_server: str,
-          no_visdom: bool):
-    # Create a dataset and a dataloader
-    dataset = SpeakerVerificationDataset(clean_data_root)
-    loader = SpeakerVerificationDataLoader(
-        dataset,
-        speakers_per_batch,
-        utterances_per_speaker,
-        num_workers=4,
-    )
-
-    # Setup the device on which to run the forward pass and the loss. These can be different,
-    # because the forward pass is faster on the GPU whereas the loss is often (depending on your
-    # hyperparameters) faster on the CPU.
+def train_model():
+    preprocessed_dir = '/Users/raycheng/Desktop/AI_final/19/198_preprocessed'
+    file_paths = [os.path.join(preprocessed_dir, f) for f in os.listdir(preprocessed_dir) if f.endswith('.txt')]
+    train_paths, val_paths = train_test_split(file_paths, test_size=0.2)
+    
+    tokenizer, model = load_pretrained_model()
+    
+    train_dataset = AudioDataset(train_paths, tokenizer)
+    val_dataset = AudioDataset(val_paths, tokenizer)
+    
+    train_dataloader = DataLoader(train_dataset, batch_size=Config.BATCH_SIZE, shuffle=True)
+    val_dataloader = DataLoader(val_dataset, batch_size=Config.BATCH_SIZE)
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # FIXME: currently, the gradient is None if loss_device is cuda
-    loss_device = torch.device("cpu")
+    model = model.to(device)
+    
+    criterion = nn.MSELoss()
+    optimizer = optim.AdamW(model.parameters(), lr=Config.LEARNING_RATE)
+    
+    for epoch in range(Config.EPOCHS):
+        model.train()
+        train_loss = 0
+        for inputs, labels in train_dataloader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            
+            optimizer.zero_grad()
+            outputs = model(inputs, labels=labels)
+            loss = outputs[0]  # The first element is the loss
+            loss.backward()
+            optimizer.step()
+            train_loss += loss.item()
+        
+        model.eval()
+        val_loss = 0
+        with torch.no_grad():
+            for inputs, labels in val_dataloader:
+                inputs = inputs.to(device)
+                labels = labels.to(device)
+                
+                outputs = model(inputs, labels=labels)
+                loss = outputs[0]  # The first element is the loss
+                val_loss += loss.item()
+        
+        print(f"Epoch {epoch + 1}, Train Loss: {train_loss / len(train_dataloader)}, Validation Loss: {val_loss / len(val_dataloader)}")
 
-    # Create the model and the optimizer
-    model = SpeakerEncoder(device, loss_device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate_init)
-    init_step = 1
+    torch.save(model.state_dict(), Config.MODEL_PATH)
 
-    # Configure file path for the model
-    model_dir = models_dir / run_id
-    model_dir.mkdir(exist_ok=True, parents=True)
-    state_fpath = model_dir / "encoder.pt"
-
-    # Load any existing model
-    if not force_restart:
-        if state_fpath.exists():
-            print("Found existing model \"%s\", loading it and resuming training." % run_id)
-            checkpoint = torch.load(state_fpath)
-            init_step = checkpoint["step"]
-            model.load_state_dict(checkpoint["model_state"])
-            optimizer.load_state_dict(checkpoint["optimizer_state"])
-            optimizer.param_groups[0]["lr"] = learning_rate_init
-        else:
-            print("No model \"%s\" found, starting training from scratch." % run_id)
-    else:
-        print("Starting the training from scratch.")
-    model.train()
-
-    # Initialize the visualization environment
-    vis = Visualizations(run_id, vis_every, server=visdom_server, disabled=no_visdom)
-    vis.log_dataset(dataset)
-    vis.log_params()
-    device_name = str(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
-    vis.log_implementation({"Device": device_name})
-
-    # Training loop
-    profiler = Profiler(summarize_every=10, disabled=False)
-    for step, speaker_batch in enumerate(loader, init_step):
-        profiler.tick("Blocking, waiting for batch (threaded)")
-
-        # Forward pass
-        inputs = torch.from_numpy(speaker_batch.data).to(device)
-        sync(device)
-        profiler.tick("Data to %s" % device)
-        embeds = model(inputs)
-        sync(device)
-        profiler.tick("Forward pass")
-        embeds_loss = embeds.view((speakers_per_batch, utterances_per_speaker, -1)).to(loss_device)
-        loss, eer = model.loss(embeds_loss)
-        sync(loss_device)
-        profiler.tick("Loss")
-
-        # Backward pass
-        model.zero_grad()
-        loss.backward()
-        profiler.tick("Backward pass")
-        model.do_gradient_ops()
-        optimizer.step()
-        profiler.tick("Parameter update")
-
-        # Update visualizations
-        # learning_rate = optimizer.param_groups[0]["lr"]
-        vis.update(loss.item(), eer, step)
-
-        # Draw projections and save them to the backup folder
-        if umap_every != 0 and step % umap_every == 0:
-            print("Drawing and saving projections (step %d)" % step)
-            projection_fpath = model_dir / f"umap_{step:06d}.png"
-            embeds = embeds.detach().cpu().numpy()
-            vis.draw_projections(embeds, utterances_per_speaker, step, projection_fpath)
-            vis.save()
-
-        # Overwrite the latest version of the model
-        if save_every != 0 and step % save_every == 0:
-            print("Saving the model (step %d)" % step)
-            torch.save({
-                "step": step + 1,
-                "model_state": model.state_dict(),
-                "optimizer_state": optimizer.state_dict(),
-            }, state_fpath)
-
-        # Make a backup
-        if backup_every != 0 and step % backup_every == 0:
-            print("Making a backup (step %d)" % step)
-            backup_fpath = model_dir / f"encoder_{step:06d}.bak"
-            torch.save({
-                "step": step + 1,
-                "model_state": model.state_dict(),
-                "optimizer_state": optimizer.state_dict(),
-            }, backup_fpath)
-
-        profiler.tick("Extras (visualizations, saving)")
+# Call this function to start training
+if __name__ == "__main__":
+    train_model()
