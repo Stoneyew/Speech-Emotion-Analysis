@@ -10,7 +10,7 @@ def preprocess_data(input_dir, output_dir, hparams):
         os.makedirs(output_dir)
     
     audio_dir = os.path.join(input_dir, "198")
-    text_dir = os.path.join(input_dir,"198_preprocessed")
+    text_dir = os.path.join(input_dir,"preprocess")
     mel_dir = os.path.join(output_dir, "mel")
     text_seq_dir = os.path.join(output_dir, "text_seq")
 
@@ -49,3 +49,9 @@ def preprocess_data(input_dir, output_dir, hparams):
 
     if missing_files:
         print(f"Missing text files for the following audio files: {missing_files}")
+
+
+input_dir = '/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/19/19'
+output_dir = '/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/19/19'
+hparams = HParams()
+preprocess_data(input_dir, output_dir, hparams)

@@ -25,4 +25,5 @@ def preprocess_data(input_dir, output_dir, config):
                 f.write(features_str)
 
 # Call this function 
-preprocess_data('/Users/raycheng/Desktop/AI_final/19/198', '/Users/raycheng/Desktop/AI_final/19/198_preprocessed', Config)
+preprocess_data('/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/LibriSpeech/train-clean-100/19/198',
+                '/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/preprocess', Config)

@@ -28,7 +28,7 @@ def load_pretrained_bert_model():
     return tokenizer
 
 def train_model():
-    preprocessed_dir = '/Users/raycheng/Desktop/AI_final/19/198_preprocessed'
+    preprocessed_dir = '/Users/angus/Desktop/college/Intro_to_ai/Real-time-voice-cloning/preprocess'
     file_paths = [os.path.join(preprocessed_dir, f) for f in os.listdir(preprocessed_dir) if f.endswith('.txt')]
     train_paths, val_paths = train_test_split(file_paths, test_size=0.2)
     

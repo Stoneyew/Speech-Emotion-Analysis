@@ -1,0 +1,7 @@
+voice
+.DS_Store
+LibriSpeech
+test/
+preprocess
+19/
+__pycache__/
