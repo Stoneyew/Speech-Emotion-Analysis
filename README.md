@@ -31,9 +31,9 @@ Speech emotion recognition using LSTM, Transformer, implemented in Keras.
 
 &nbsp;
 
-## Requirments
+<--## Requirments -->
 
-### Python
+<--### Python-->
 
 &nbsp;
 
