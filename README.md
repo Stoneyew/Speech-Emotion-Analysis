@@ -1,7 +1,6 @@
 # Speech Emotion Recognition
 
 Speech emotion recognition using LSTM, Transformer, implemented in Keras.
-
 &nbsp;
 
 ## Environments
@@ -14,19 +13,20 @@ Speech emotion recognition using LSTM, Transformer, implemented in Keras.
 ## Structure
 
 ```
-├──  transformer_model.py   // transformer
-├──  transformer_train.py   // train transformer
-├──  transformer_predict.py // prediction using transformer model
-├──  data_classify.py       // data processing
-├──  base.py                // base model for transformer
-├──  lstm.py                // LSTM
+├── transformer_model.py    // transformer
+├── transformer_train.py    // train transformer
+├── transformer_predict.py  // prediction using transformer model
+├── data_classify.py        // data processing
+├── base.py                 // base model for transformer
+├── lstm.py                 // LSTM
 ├── libro.py                // extract features using librosa
 ├── configs.py              // configure hyper parameters
+├── datasets/               // store dataset
 ├── features/               // store extracted features
 ├── checkpoints/            // store model weights
 ├── train.py                // train
 ├── predict.py              // recognize the emotion of a given audio
-└── preprocess.py          // data preprocessing (extract features and store them locally)
+└── preprocess.py           // data preprocessing (extract features and store them locally)
 ```
 
 &nbsp;
@@ -103,14 +103,14 @@ python transformer_train.py
 
 This is for when you have trained a model and want to predict the emotion for an audio. Check out [`checkpoints/`](https://github.com/Anguschen0430/AI_final_project/tree/main/checkpoints) for some checkpoints.
 
-
 For example, if you want to predict a LSTM model:
 
 ```python
 python predict.py
 ```
+
 ```python
-Input audio_path: 
+Input audio_path:
 ```
 
 Else, for transformers:
@@ -119,8 +119,8 @@ Else, for transformers:
 python transformer_predict.py
 ```
 
-
 &nbsp;
 
 ### TODO
+
 Fix transformer
