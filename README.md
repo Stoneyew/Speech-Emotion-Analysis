@@ -2,8 +2,6 @@
 
 Speech emotion recognition using LSTM, Transformer, implemented in Keras.
 
-We have improved the feature extracting method and achieved higher accuracy (about 80%).
-
 &nbsp;
 
 ## Environments
@@ -16,24 +14,18 @@ We have improved the feature extracting method and achieved higher accuracy (abo
 ## Structure
 
 ```
-├── models/                // models
-│   ├── common.py          // base class for all models
-│   ├── dnn                // neural networks
-│   │   ├── dnn.py         // base class for all neural networks models
-│   │   ├── cnn.py         // CNN
-│   │   └── lstm.py        // LSTM
-│   └── ml.py              // SVM & MLP
-├── extract_feats/         // features extraction
-│   └── libro.py         // extract features using librosa 
-├── utils/
-│   ├── files.py           // setup dataset (classify and rename)
-│   ├── opts.py            // argparse
-│   └── plot.py            // plot graphs
-├── configs/               // configure hyper parameters
-├── features/              // store extracted features
-├── checkpoints/           // store model weights
-├── train.py               // train
-├── predict.py             // recognize the emotion of a given audio
+├──  transformer_model.py   // transformer
+├──  transformer_train.py   // train transformer
+├──  transformer_predict.py // prediction using transformer model
+├──  data_classify.py       // data processing
+├──  base.py                // base model for transformer
+├──  lstm.py                // LSTM
+├── libro.py                // extract features using librosa
+├── configs.py              // configure hyper parameters
+├── features/               // store extracted features
+├── checkpoints/            // store model weights
+├── train.py                // train
+├── predict.py              // recognize the emotion of a given audio
 └── preprocess.py          // data preprocessing (extract features and store them locally)
 ```
 
@@ -111,16 +103,14 @@ python transformer_train.py
 
 This is for when you have trained a model and want to predict the emotion for an audio. Check out [`checkpoints/`](https://github.com/Anguschen0430/AI_final_project/tree/main/checkpoints) for some checkpoints.
 
-First modify following things in [`predict.py`](predict.py):
-
-```python
-audio_path = 'str: path_to_your_audio'
-```
 
 For example, if you want to predict a LSTM model:
 
 ```python
 python predict.py
+```
+```python
+Input audio_path: 
 ```
 
 Else, for transformers:
@@ -129,76 +119,8 @@ Else, for transformers:
 python transformer_predict.py
 ```
 
-&nbsp;
-
-### Functions
-
-#### Radar Chart
-
-Plot a radar chart for demonstrating predicted probabilities.
-
-Source: [Radar](https://github.com/Zhaofan-Su/SpeechEmotionRecognition/blob/master/leidatu.py)
-
-```python
-import plot
-
-"""
-Args:
-    data_prob (np.ndarray): probabilities
-    class_labels (list): labels
-"""
-plot.radar(data_prob, class_labels)
-```
 
 &nbsp;
 
-#### Play Audio
-
-```python
-import plot
-
-plot.play_audio(file_path)
-```
-
-&nbsp;
-
-#### Plot Curve
-
-Plot loss curve or accuracy curve.
-
-```python
-import plot
-
-"""
-Args:
-    train (list): loss or accuracy on train set
-    val (list): loss or accuracy on validation set
-    title (str): title of figure
-    y_label (str): label of y axis
-"""
-plot.curve(train, val, title, y_label)
-```
-
-&nbsp;
-
-#### Waveform
-
-Plot a waveform for an audio file.
-
-```python
-import plot
-
-plot.waveform(file_path)
-```
-
-&nbsp;
-
-#### Spectrogram
-
-Plot a spectrogram for an audio file.
-
-```python
-import plot
-
-plot.spectrogram(file_path)
-```
+### TODO
+Fix transformer
