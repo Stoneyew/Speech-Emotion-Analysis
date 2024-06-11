@@ -23,10 +23,6 @@ source Speech-emotion-analysis/bin/activate
 which python 
 ```
 
-
-
-
-
 &nbsp;
 
 ## Structure
@@ -39,7 +35,7 @@ which python
 ├── base.py                 // base model for transformer
 ├── lstm.py                 // LSTM
 ├── libro.py                // extract features using librosa
-├── configs.py              // configure hyper parameters
+├── configs.py              // configure hyperparameters
 ├── datasets/               // store dataset
 ├── features/               // store extracted features
 ├── checkpoints/            // store model weights
@@ -79,12 +75,12 @@ Every configuration is stored in [`configs.py`](https://github.com/Stoneyew/Spee
 &nbsp;
 
 ### Preprocess
-Before extracting, you should classify the source_date to datasets.(source_file="source" to destination_directory="datasets")
+Before extracting, you should classify the source_date into datasets.(source_file="source" to destination_directory="datasets")
 ```python
 python data_classify.py
 ```
 
-First of all, you should extract features of each audio in dataset and store them locally. Features extracted by librosa will be saved in `.p` files.
+First of all, you should extract features of each audio in the dataset and store them locally. Features extracted by librosa will be saved in `.p` files.
 
 ```python
 python preprocess.py
@@ -94,7 +90,7 @@ python preprocess.py
 
 ### Train
 
-Audios which express the same emotion should be put in the same folder (you may want to refer to [`data_classify.py`] when setting up datasets), for example:
+Audios that express the same emotion should be put in the same folder (you may want to refer to [`data_classify.py`] when setting up datasets), for example:
 
 ```
 └── datasets
@@ -104,7 +100,7 @@ Audios which express the same emotion should be put in the same folder (you may 
     ...
 ```
 
-For example, if you want to train a LSTM model:
+For example, if you want to train an LSTM model:
 
 ```python
 python train.py
@@ -122,7 +118,7 @@ python transformer_train.py
 
 This is for when you have trained a model and want to predict the emotion for an audio. Check out [`checkpoints/`](https://github.com/Anguschen0430/AI_final_project/tree/main/checkpoints) for some checkpoints.
 
-For example, if you want to predict a LSTM model:
+For example, if you want to predict an LSTM model:
 
 ```python
 python predict.py
