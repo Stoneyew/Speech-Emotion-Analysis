@@ -10,7 +10,7 @@ Recommend use virtual environment
 - Keras & TensorFlow 2
 (1) Create the environment
 ```
-python3 -m venv Speech-emotion-analysis 
+python3.8 -m venv Speech-emotion-analysis 
 ```
 (2)Activate
 ```
@@ -18,7 +18,7 @@ source lSpeech-emotion-analysis/bin/activate
 ```
 (3)Check #Display the destination 
 ```
-which python3 
+which python 
 ```
 
 
@@ -77,6 +77,10 @@ Every configuration is stored in [`configs.py`](configs).
 &nbsp;
 
 ### Preprocess
+Before extracting, you should classify the source_date to datasets.(source_file="source" to destination_directory="datasets")
+```python
+python data_classify.py
+```
 
 First of all, you should extract features of each audio in dataset and store them locally. Features extracted by librosa will be saved in `.p` files.
 
