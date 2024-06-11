@@ -1,5 +1,3 @@
-# config.py
-
 # data
 model = "lstm"
 
@@ -35,3 +33,13 @@ lr = 0.001  # learn rate
 rnn_size = 128  # LSTM hidden layer size
 hidden_size = 32
 dropout = 0.5
+
+params = {
+    'alpha': 0.01,
+    'batch_size': 256,
+    'epsilon': 1e-08, 
+    'hidden_layer_sizes': (300,),
+    'solver': 'adam',
+    'learning_rate': 'adaptive', 
+    'max_iter': 500, 
+}
