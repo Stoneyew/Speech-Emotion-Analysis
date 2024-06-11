@@ -6,7 +6,6 @@ from sklearn.metrics import accuracy_score
 from sklearn.base import BaseEstimator
 
 class BaseModel(ABC):
-    """所有模型的基础类"""
 
     def __init__(
         self,
@@ -18,22 +17,18 @@ class BaseModel(ABC):
 
     @abstractmethod
     def train(self) -> None:
-        """训练模型"""
         pass
 
     @abstractmethod
     def predict(self, samples: np.ndarray) -> np.ndarray:
-        """预测音频的情感"""
         pass
 
     @abstractmethod
     def predict_proba(self, samples: np.ndarray) -> np.ndarray:
-        """预测音频的情感的置信概率"""
         pass
 
     @abstractmethod
     def save(self, path: str, name: str) -> None:
-        """保存模型"""
         pass
 
     @classmethod
@@ -45,16 +40,10 @@ class BaseModel(ABC):
     @classmethod
     @abstractmethod
     def make(cls):
-        """搭建模型"""
         pass
 
     def evaluate(self, x_test: np.ndarray, y_test: np.ndarray) -> None:
-        """
-        在测试集上评估模型，输出准确率
-        Args:
-            x_test (np.ndarray): 样本
-            y_test (np.ndarray): 标签（ground truth）
-        """
+
         predictions = self.predict(x_test)
         accuracy = accuracy_score(y_pred=predictions, y_true=y_test)
         # accuracy = self.model.score(x_test, y_test)
