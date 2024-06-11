@@ -1,7 +1,11 @@
-voice
+# Ignore compiled Python files
+*.pyc
+__pycache__
+checkpoints/
+features/
 .DS_Store
-LibriSpeech
-test/
-preprocess
-19/
-__pycache__/
+
+test
+*.env
+datasets
+samples
