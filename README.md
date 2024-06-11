@@ -1,11 +1,11 @@
 # Speech Emotion Recognition
 
-Speech emotion Analsis using LSTM, Transformer, implemented in Keras.
+Speech emotion Analysis using LSTM, Transformer, implemented in Keras.
 &nbsp;
 
 ## Environments
 
-Recommend use virtual environment 
+Recommend use of virtual environment 
 - Python 3.8
 - Keras & TensorFlow 2
 
@@ -16,9 +16,9 @@ python3.8 -m venv Speech-emotion-analysis
 ```
 (2)Activate
 ```
-source lSpeech-emotion-analysis/bin/activate
+source Speech-emotion-analysis/bin/activate
 ```
-(3)Check #Display the destination 
+(3)Check the version of Python of the destination 
 ```
 which python 
 ```
