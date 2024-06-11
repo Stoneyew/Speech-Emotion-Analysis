@@ -8,6 +8,8 @@ Speech emotion Analsis using LSTM, Transformer, implemented in Keras.
 Recommend use virtual environment 
 - Python 3.8
 - Keras & TensorFlow 2
+
+
 (1) Create the environment
 ```
 python3.8 -m venv Speech-emotion-analysis 
