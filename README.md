@@ -74,7 +74,7 @@ pip install -r requirements.txt
 
 ### Configuration
 
-Every configuration is stored in [`configs.py`](configs).
+Every configuration is stored in [`configs.py`](https://github.com/Stoneyew/Speech-Emotion-Analysis/blob/main/configs.py).
 
 &nbsp;
 
