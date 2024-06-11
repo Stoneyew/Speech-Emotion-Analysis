@@ -116,7 +116,7 @@ python transformer_train.py
 
 ### Predict
 
-This is for when you have trained a model and want to predict the emotion for an audio. Check out [`checkpoints/`](https://github.com/Anguschen0430/AI_final_project/tree/main/checkpoints) for some checkpoints.
+This is for when you have trained a model and want to predict the emotion for an audio. Check out [`checkpoints/`](https://github.com/Stoneyew/Speech-Emotion-Analysis/tree/main/checkpoints) for some checkpoints.
 
 For example, if you want to predict an LSTM model:
 
