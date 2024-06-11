@@ -121,9 +121,7 @@ For example, if you want to predict an LSTM model:
 python predict.py
 ```
 
-```python
-Input audio_path:
-```
+Input audio_path: <your dir of target audio>
 
 Else, for transformers:
 
@@ -132,7 +130,11 @@ python transformer_predict.py
 ```
 
 &nbsp;
+## Result
+[angry_voice](https://github.com/Stoneyew/Speech-Emotion-Analysis/assets/146422042/318f82cd-c759-4785-9673-41c598d00059)
 
-### TODO
 
-#### Fix transformer
+&nbsp;
+## TODO
+
+### Fix transformer
