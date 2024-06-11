@@ -38,8 +38,8 @@ def train_model(config) -> None:
         y_test_cat = to_categorical(y_test)  # Categorical encoding
         unique_labels_train = np.unique(y_train.argmax(axis=1))
         unique_labels_test = np.unique(y_test)
-        print("Unique labels in training set:", unique_labels_train)
-        print("Unique labels in test set:", unique_labels_test)
+        # print("Unique labels in training set:", unique_labels_train)
+        # print("Unique labels in test set:", unique_labels_test)
         
         model.train(
             x_train, y_train,
